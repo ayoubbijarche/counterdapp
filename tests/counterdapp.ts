@@ -5,8 +5,8 @@ import { Counterdapp } from "../target/types/counterdapp";
 
 
 describe("counterdapp", () => {
-  anchor.setProvider(anchor.AnchorProvider.env());
   const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
   const program = anchor.workspace.Counterdapp as Program<Counterdapp>;
   const counterAccount = anchor.web3.Keypair.generate();
   const payer = provider.wallet as anchor.Wallet;

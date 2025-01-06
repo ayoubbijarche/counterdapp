@@ -48,9 +48,9 @@ pub struct Modify<'info>{
     pub owner : Signer<'info>
 }
 
-
 #[account]
 pub struct Counter{
     pub count : i64,
     pub owner : Pubkey
 }
+
