@@ -9,34 +9,40 @@ describe("counterdapp", () => {
   const provider = anchor.AnchorProvider.env();
   const program = anchor.workspace.Counterdapp as Program<Counterdapp>;
   const counterAccount = anchor.web3.Keypair.generate();
-  
+  const payer = provider.wallet as anchor.Wallet;
+
   it("Is initialized!", async () => {
-    const tx = await program.rpc.initialize({
-      accounts : {
-        countAcc : counterAccount.publicKey,
-        user : provider.wallet.publicKey,
-        systemProgram : anchor.web3.SystemProgram.programId,
-      },
-      signers : [counterAccount]
-    }as any);
+    const tx = await program.methods
+      .initialize()
+      .accounts({
+          counter : counterAccount.publicKey,
+          user : payer.publicKey
+      })
+      .signers([counterAccount])
+      .rpc()
+    
+      console.log("your transaction signature : ", tx)
   })
   
   it("increments value of the counter", async () => {
-    const increment_tx = await program.rpc.increment({
-      accounts : {
-        countAcc : counterAccount
-      }
-    } as any);
+    const increment_tx = await program.methods
+      .increment()
+      .accounts({
+        counter : counterAccount.publicKey
+      })
+      .rpc()
+      
     console.log("Your transaction signature", increment_tx);
   })
   
   it("decrements value of the counter", async () => {
-    const decrement_tx = await program.rpc.decrement({
-      accounts : {
-        countAcc : counterAccount
-      }
-    } as any);
-    console.log("Your transaction signature", decrement_tx);
+    const increment_tx = await program.methods
+      .decrement()
+      .accounts({
+        counter : counterAccount.publicKey,        
+      })
+      .rpc()
+    console.log("Your transaction signature", increment_tx);
   })
 
 });

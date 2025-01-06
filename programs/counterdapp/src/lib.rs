@@ -8,19 +8,19 @@ pub mod counterdapp {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        let counter_acc = &mut ctx.accounts.count_acc;
+        let counter_acc = &mut ctx.accounts.counter;
         counter_acc.count = 0;
         Ok(())
     }
 
-    pub fn increment(ctx : Context<Initialize>) -> Result<()>{
-        let counter_acc = &mut ctx.accounts.count_acc;
+    pub fn increment(ctx : Context<Modify>) -> Result<()>{
+        let counter_acc = &mut ctx.accounts.counter;
         counter_acc.count += 1;
         Ok(())
     }
 
-    pub fn decrement(ctx : Context<Initialize>) -> Result<()>{
-        let counter_acc = &mut ctx.accounts.count_acc;
+    pub fn decrement(ctx : Context<Modify>) -> Result<()>{
+        let counter_acc = &mut ctx.accounts.counter;
         counter_acc.count -= 1;
         Ok(())
     }
@@ -31,15 +31,26 @@ pub struct Initialize<'info>{
     #[account(
         init,
         payer = user,
-        space = 16+16
+        space = 8+8+32
     )]
-    pub count_acc : Account<'info , Counter>,
+    pub counter : Account<'info , Counter>,
     #[account(mut)]
     pub user : Signer<'info>,
     pub system_program : Program<'info , System>
 }
 
+#[derive(Accounts)]
+pub struct Modify<'info>{
+    #[account(
+        mut,
+    )]
+    pub counter : Account<'info , Counter>,
+    pub owner : Signer<'info>
+}
+
+
 #[account]
 pub struct Counter{
-    pub count : u64
+    pub count : i64,
+    pub owner : Pubkey
 }
