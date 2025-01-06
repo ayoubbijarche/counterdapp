@@ -36,13 +36,13 @@ describe("counterdapp", () => {
   })
   
   it("decrements value of the counter", async () => {
-    const increment_tx = await program.methods
+    const decrement_tx = await program.methods
       .decrement()
       .accounts({
         counter : counterAccount.publicKey,        
       })
       .rpc()
-    console.log("Your transaction signature", increment_tx);
+    console.log("Your transaction signature", decrement_tx);
   })
 
 });
